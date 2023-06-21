@@ -1,0 +1,329 @@
+ARG from=ubuntu:jammy
+FROM ${from}
+#FROM nvidia/cudagl:11.1.1-devel-ubuntu20.04
+
+ARG CMAKE_INSTALL_PREFIX=/usr/local
+ARG NUM_THREADS=8
+
+# Avoid warnings by switching to noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Update all packages
+RUN apt-get update && apt-get -y dist-upgrade
+
+# ros-core include begin
+# https://github.com/osrf/docker_images/blob/master/ros/humble/ubuntu/jammy/ros-core/Dockerfile
+# setup timezone
+RUN echo 'Etc/UTC' > /etc/timezone && \
+  ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime && \
+  apt-get update && \
+  apt-get install -q -y --no-install-recommends tzdata && \
+  rm -rf /var/lib/apt/lists/*
+
+# install packages
+RUN apt-get update && apt-get install -q -y --no-install-recommends \
+  dirmngr \
+  gnupg2 \
+  curl \
+  && rm -rf /var/lib/apt/lists/*
+
+# setup sources.list
+RUN echo "deb http://packages.ros.org/ros2/ubuntu jammy main" > /etc/apt/sources.list.d/ros2-latest.list
+
+# setup keys
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+
+# setup environment
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
+ENV ROS_DISTRO humble
+
+# ros-base include begin
+# https://github.com/osrf/docker_images/blob/master/ros/galactic/ubuntu/focal/ros-core/Dockerfile
+# https://github.com/osrf/docker_images/blob/master/ros/humble/ubuntu/jammy/ros-base/Dockerfile
+# install bootstrap tools
+RUN apt-get update && apt-get install --no-install-recommends -y \
+  build-essential \
+  git \
+  python3-colcon-common-extensions \
+  python3-colcon-mixin \
+  python3-rosdep \
+  python3-vcstool \
+  && rm -rf /var/lib/apt/lists/*
+
+# bootstrap rosdep
+RUN rosdep init && \
+  rosdep update --rosdistro $ROS_DISTRO
+
+# setup colcon mixin and metadata
+RUN colcon mixin add default \
+  https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml && \
+  colcon mixin update && \
+  colcon metadata add default \
+  https://raw.githubusercontent.com/colcon/colcon-metadata-repository/master/index.yaml && \
+  colcon metadata update
+
+# install dependencies via apt
+ENV DEBCONF_NOWARNINGS yes
+
+
+RUN apt-get update -y -qq && \
+  : "system dependencies" && \
+  export DEBIAN_FRONTEND=noninteractive && \
+  apt-get install -y -qq \
+  \
+  aptitude \
+  autoconf \
+  automake \
+  build-essential \
+  cmake \
+  curl \
+  dnsutils \
+  git \
+  git-lfs \
+  gitk \
+  gtk-doc-tools \
+  intltool \
+  iputils-ping \
+  libblosc1 \
+  libbondcpp-dev \
+  libcgal-dev \
+  mlocate \
+  npm \
+  pkg-config \
+  python-odf-doc \
+  python-odf-tools \
+  python-tables-data \
+  python3-bottleneck \
+  python3-bs4 \
+  python3-defusedxml \
+  python3-et-xmlfile \
+  python3-html5lib \
+  python3-ipython \
+  python3-jdcal \
+  python3-numexpr \
+  python3-odf \
+  python3-opencv \
+  python3-openpyxl \
+  python3-pandas \
+  python3-pandas-lib \
+  python3-pip \
+  python3-soupsieve \
+  python3-tables \
+  python3-webencodings \
+  python3-xlrd \
+  python3-xlwt \
+  tar \
+  unzip \
+  wget \
+  xterm \
+  && \
+  : "remove cache" && \
+  apt-get autoremove -y -qq && \
+  apt-get clean -y && \
+  rm -rf /var/lib/apt/lists/* && \
+  : "use pip for packages not in ubuntu repo"  && \
+  # python code format
+  /bin/python3 -m pip install -U autopep8
+
+# Set environment variables
+#ENV TURTLEBOT3_MODEL=waffle
+#ENV GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/workspaces/ws_bike2cav/src/turtlebot3_simulations/turtlebot3_gazebo/models
+
+RUN apt-get update -y -qq && \
+  : "install ROS basics" && \
+  apt-get -y install --no-install-recommends \
+  ros-humble-ros-core=0.10.0-1* \
+  ros-humble-ros-base=0.10.0-1* \
+  ros-humble-desktop=0.10.0-1* \
+  && \
+  : "remove cache" && \
+  apt-get autoremove -y -qq && \
+  apt-get clean -y && \
+  rm -rf /var/lib/apt/lists/*
+
+RUN \
+  # set -x for debug output
+  set -x && \
+  apt-get update -y -qq && \
+  : "install ROS dependencies" && \
+  apt-get -y install --no-install-recommends \
+  ros-humble-ament-cmake-google-benchmark \
+  ros-humble-backward-ros \
+  ros-humble-bond \
+  ros-humble-bondcpp \
+  ros-humble-compressed-depth-image-transport \
+  ros-humble-compressed-image-transport \
+  ros-humble-control-msgs \
+  ros-humble-control-toolbox \
+  ros-humble-controller-interface \
+  ros-humble-controller-manager \
+  ros-humble-controller-manager-msgs \
+  ros-humble-diagnostic-aggregator \
+  ros-humble-diagnostic-updater \
+  ros-humble-effort-controllers  \
+  ros-humble-filters \
+  ros-humble-force-torque-sensor-broadcaster \
+  ros-humble-forward-command-controller \
+  ros-humble-gazebo-ros-pkgs \
+  ros-humble-gazebo-ros2-control \
+  ros-humble-generate-parameter-library \
+  ros-humble-hardware-interface \
+  ros-humble-image-transport-plugins \
+  ros-humble-imu-sensor-broadcaster \
+  ros-humble-joint-state-broadcaster \
+  ros-humble-joint-state-publisher \
+  ros-humble-joint-state-publisher-gui\
+  # ros-humble-joint-trajectory-controller \
+  ros-humble-nav2-bringup \
+  ros-humble-navigation2 \
+  ros-humble-octomap \
+  ros-humble-octomap-msgs \
+  ros-humble-perception-pcl \
+  ros-humble-position-controllers \
+  ros-humble-realtime-tools \
+  ros-humble-robot-localization \
+  ros-humble-ros2-control-test-assets \
+  ros-humble-ros2-control\
+  # ros-humble-ros2-controllers \
+  ros-humble-ros2controlcli \
+  ros-humble-rsl \
+  ros-humble-rmw-cyclonedds-cpp \
+  ros-humble-rqt-robot-monitor \
+  ros-humble-rqt-robot-steering \
+  ros-humble-smclib \
+  ros-humble-tcb-span \
+  ros-humble-theora-image-transport \
+  ros-humble-transmission-interface \
+  ros-humble-ublox \
+  ros-humble-velocity-controllers \
+  ros-humble-xacro \
+  && \
+  : "remove cache" && \
+  apt-get autoremove -y -qq && \
+  apt-get clean -y && \
+  rm -rf /var/lib/apt/lists/*
+
+# --- ros-humble-plotjuggler does not work, see
+# https://github.com/facontidavide/PlotJuggler/issues/737
+# RUN \
+#   # set -x for debug output
+#   set -x && \
+#   apt-get update -y -qq && \
+#   : "install plotjuggler from debian" && \
+#   ros-humble-plotjuggler-msgs \
+#   ros-humble-plotjuggler-ros \
+#   && \
+#   : "remove cache" && \
+#   apt-get autoremove -y -qq && \
+#   apt-get clean -y && \
+#   rm -rf /var/lib/apt/lists/*
+
+# install plotjuggler from source
+RUN \
+  # set -x for debug output
+  set -x && \
+  apt-get update -y -qq && \
+  : "install plotjuggler from src" && \
+  apt-get -y install --no-install-recommends \
+  qtbase5-dev libqt5svg5-dev libqt5websockets5-dev \
+  libqt5opengl5-dev libqt5x11extras5-dev libprotoc-dev libzmq3-dev && \
+  mkdir -p /opt/ros/ws_plotjuggler/src && \
+  cd /opt/ros/ws_plotjuggler/src && \
+  git clone https://github.com/PlotJuggler/plotjuggler_msgs.git && \
+  git clone https://github.com/facontidavide/PlotJuggler.git && \
+  git clone --depth 1 --branch rolling-1.7.3 https://github.com/PlotJuggler/plotjuggler-ros-plugins.git && \
+  cd /opt/ros/ws_plotjuggler && \
+  /bin/bash -c ". /opt/ros/humble/setup.bash && colcon build" && \
+  : "remove cache" && \
+  apt-get autoremove -y -qq && \
+  apt-get clean -y && \
+  rm -rf /var/lib/apt/lists/*
+
+# install behavior trees
+# RUN \
+#   # set -x for debug output
+#   set -x && \
+#   apt-get update -y -qq && \
+#   : "install BehaviorTree.CPPv3.8 from src" && \
+#   apt-get -y install --no-install-recommends \
+#   libzmq3-dev libboost-dev && \
+#   cd /opt/ && \
+#   git clone --depth 1 --branch v3.8 https://github.com/BehaviorTree/BehaviorTree.CPP.git && \
+#   cd /opt/BehaviorTree.CPP && \
+#   mkdir build && cd build %% \
+#   cmake .. && \
+#   make && \
+#   make install && \
+#   : "remove cache" && \
+#   apt-get autoremove -y -qq && \
+#   apt-get clean -y && \
+#   rm -rf /var/lib/apt/lists/*
+
+# install groot
+# RUN \
+#   # set -x for debug output
+#   set -x && \
+#   apt-get update -y -qq && \
+#   : "install groot from src" && \
+#   apt-get -y install --no-install-recommends \
+#   qtbase5-dev libqt5svg5-dev libzmq3-dev libdw-dev && \
+#   cd /opt/ && \
+#   git clone --depth 1 https://github.com/BehaviorTree/Groot.git && \
+#   cd /opt/Groot && \
+#   git submodule update --init --recursive && \
+#   mkdir build && cd build %% \
+#   cmake .. && \
+#   make && \
+#   make install && \
+#   : "remove cache" && \
+#   apt-get autoremove -y -qq && \
+#   apt-get clean -y && \
+#   rm -rf /var/lib/apt/lists/*
+
+# install git extension 
+RUN npm install -g git-removed-branches
+
+# This Dockerfile adds a non-root user with sudo access. Use the "remoteUser"
+# property in devcontainer.json to use it. On Linux, the container user's GID/UIDs
+# will be updated to match your local UID/GID (when using the dockerFile property).
+# See https://aka.ms/vscode-remote/containers/non-root-user for details.
+ARG USERNAME=vscode
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+# Options for common package install script - SHA generated on release
+ARG INSTALL_ZSH="false"
+ARG UPGRADE_PACKAGES="true"
+ARG COMMON_SCRIPT_SOURCE="https://raw.githubusercontent.com/microsoft/vscode-dev-containers/v0.245.2/script-library/common-debian.sh"
+ARG COMMON_SCRIPT_SHA="d570f548f2f8df9563010492290ffda6105ed4026f452cdb506df8c0ce65acae"
+
+# Configure apt and install packages
+RUN apt-get update \
+  && export DEBIAN_FRONTEND=noninteractive \
+  #
+  # Verify git, common tools / libs installed, add/modify non-root user, optionally install zsh
+  && apt-get -y install --no-install-recommends curl ca-certificates 2>&1 \
+  && curl -sSL  ${COMMON_SCRIPT_SOURCE} -o /tmp/common-debian.sh \
+  && ([ "${COMMON_SCRIPT_SHA}" = "dev-mode" ] || (echo "${COMMON_SCRIPT_SHA} /tmp/common-debian.sh" | sha256sum -c -)) \
+  && /bin/bash /tmp/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
+  && rm /tmp/common-debian.sh \
+  && apt-get -y install --no-install-recommends build-essential gdb gdbserver cmake aptitude udev can-utils python3-pyqtgraph 2>&1 \
+  #
+  # Clean ups
+  && apt-get autoremove -y \
+  && apt-get clean -y \
+  && rm -rf /var/lib/apt/lists/*
+
+# Switch back to dialog for any ad-hoc use of apt-get
+ENV DEBIAN_FRONTEND=dialog
+
+RUN echo "source /opt/ros/humble/setup.bash" >> "/home/${USERNAME}/.bashrc" \
+  && echo "source /usr/share/gazebo/setup.sh" >>"/home/${USERNAME}/.bashrc"  \
+  && echo "source /opt/ros/ws_plotjuggler/install/setup.bash" >>"/home/${USERNAME}/.bashrc" \
+  && echo "source /workspaces/ros2_baustelle_ws/install/setup.bash" >>"/home/${USERNAME}/.bashrc"  \
+  && usermod -aG 104 ${USERNAME} \
+  && usermod -aG video ${USERNAME} \
+  && usermod -aG dialout ${USERNAME} \
+  && usermod -aG kvm ${USERNAME} # joystick

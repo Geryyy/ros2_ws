@@ -1,0 +1,90 @@
+{
+  "name": "ROS2 Baustelle WS",
+  "dockerFile": "Dockerfile.vscode",
+  "build": { //docker build arguments
+    "args": {
+      //the from argument (docker we start with)
+      //  if you do not have an nvidia driver (eg intel)
+      "from": "ubuntu:jammy"
+      //  if you have an nvidia driver use the following
+      //"from": "nvidia/cudagl:11.1.1-devel-ubuntu20.04"
+    }
+  },
+  "context": "..",
+  //"dockerComposeFile": ["docker-compose.yml", "docker-compose.extend.yml"],
+  //"service": "vscode_service",
+  //"workspaceMount": "source=${localWorkspaceFolder}/src,target=/workspace,type=bind,consistency=delegated",
+  //"workspaceFolder": "/workspace"
+  //"shutdownAction": "stopCompose",
+  //"runServices" : ["vscode_service"],
+  // Set *default* container specific settings.json values on container create.
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash",
+    "workbench.colorTheme": "Solarized Dark"
+  },
+  // Add the IDs of extensions you want installed when the container is created.
+  "extensions": [
+    "dotjoshjohnson.xml",
+    "zachflower.uncrustify",
+    "ms-python.python",
+    "ms-iot.vscode-ros",
+    "ms-python.python",
+    "ms-vscode.cpptools",
+    "ms-vscode.cmake-tools",
+    "redhat.vscode-yaml",
+    "redhat.vscode-xml",
+    "smilerobotics.urdf",
+    "streetsidesoftware.code-spell-checker",
+    "yzhang.markdown-all-in-one",
+    "eamodio.gitlens",
+    "mhutchie.git-graph"
+  ],
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // "forwardPorts": [],
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "uname -a",
+  // Uncomment to use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/docker-in-docker.
+  // "mounts": [ "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind" ],
+  // https://docs.docker.com/engine/reference/commandline/run/
+  // Uncomment when using a ptrace-based debugger like C++, Go, and Rust
+  //"runArgs": [ "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined", "--runtime", "nvidia", "--privileged", "--gpus", "all", "-e", "DISPLAY", "-e", "QT_X11_NO_MITSHM=1", "--net", "host", "-v", "/home/user/.Xauthority:/root/.Xauthority:rw", "-v", "/tmp/.X11-unix:/tmp/.X11-unix" ],
+  "runArgs": [
+    // nvidia begin
+    // "--runtime",
+    // "nvidia",
+    // "--gpus",
+    // "all",
+    // nvidia end
+    "--cap-add=SYS_PTRACE",
+    "--security-opt",
+    "seccomp=unconfined",
+    "--privileged",
+    "-e",
+    "DISPLAY=${env:DISPLAY}",
+    "-e",
+    "QT_X11_NO_MITSHM=1",
+    "-e",
+    "XDG_RUNTIME_DIR=${env:XDG_RUNTIME_DIR}",
+    "--net",
+    "host",
+    //"-v", ".:/workspace:cached",
+    // "-v",
+    // "/home/user/.Xauthority:/root/.Xauthority:rw",
+    // "-v",
+    // "/home/murschitzm/test:/mnt/data",
+    "-v",
+    "/tmp/.X11-unix:/tmp/.X11-unix",
+    "--device=/dev:/dev"
+  ],
+  // sets correct permission for shell scripts. may be run once only
+  "onCreateCommand": "sudo chmod +x .devcontainer/*.sh",
+  // needed if using windows -> overrides DISPLAY env for WSL2 docker container. works with linux, too
+  // has to be commented out on a LINUX host or we set the display variable acording to the host system
+  "updateContentCommand": "./.devcontainer/updateContentCommand.sh",
+  // this installs the development dependencies
+  "postCreateCommand": "./.devcontainer/postCreateCommand.sh",
+  // for git settings
+  "postAttachCommand": "./.devcontainer/postAttachCommand.sh",
+  // Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
+  "remoteUser": "vscode"
+}

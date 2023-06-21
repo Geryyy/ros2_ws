@@ -1,0 +1,302 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Launch file",
+      "type": "python",
+      "request": "launch",
+      "program": "/opt/ros/humble/bin/ros2",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "args": [
+        "launch",
+        "epsilon_crane_bringup",
+        "gazebo_model.launch.py"
+      ]
+    },
+    {
+      "name": "Gazebo crane model with manual control",
+      "type": "python",
+      "request": "launch",
+      "program": "/opt/ros/humble/bin/ros2",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "args": [
+        "launch",
+        "epsilon_crane_bringup",
+        "gazebo_model.launch.py",
+        "plot:=${input:plot}",
+        "rviz:=${input:rviz}",
+        "logs_sim:=${input:perception}",
+        "initial_pose:=${input:initialPose}",
+        "cross_pile:=${input:crossPile}",
+        "sw_controller:=${input:swController}",
+        "tool:=${input:tool}",
+      ],
+      "preLaunchTask": "stop gzserver"
+    },
+    {
+      "name": "Gazebo gripper model",
+      "type": "python",
+      "request": "launch",
+      "program": "/opt/ros/humble/bin/ros2",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "args": [
+        "launch",
+        "epsilon_crane_bringup",
+        "gazebo_gripper.launch.py",
+        "plot:=${input:plot}",
+        "tool:=${input:tool}",
+      ],
+      "preLaunchTask": "stop gzserver"
+    },
+    {
+      "name": "Gazebo model with motion planning",
+      "type": "python",
+      "request": "launch",
+      "program": "/opt/ros/humble/bin/ros2",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "args": [
+        "launch",
+        "epsilon_crane_bringup",
+        "gazebo_model.launch.py",
+        "plot:=${input:plot}",
+        "logs_sim:=True",
+        "initial_pose:=${input:initialPose}",
+        "cross_pile:=${input:crossPile}",
+        "a2b_server_type:=${input:a2b_server_type}",
+        "sw_controller:=4",
+        "mp:=True",
+        "tool:=${input:tool}",
+      ],
+      "preLaunchTask": "stop gzserver"
+    },
+    {
+      "name": "Bringup crane rviz model",
+      "type": "python",
+      "request": "launch",
+      "program": "/opt/ros/humble/bin/ros2",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "args": [
+        "launch",
+        "epsilon_crane_description",
+        "description.launch.py",
+        "tool:=${input:tool}",
+        "gui:=True",
+        "rviz:=True"
+      ]
+    },
+    {
+      "name": "Bringup tool rviz model",
+      "type": "python",
+      "request": "launch",
+      "program": "/opt/ros/humble/bin/ros2",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "args": [
+        "launch",
+        "crane_tools_description",
+        "description.launch.py",
+        "tool:=${input:tool}",
+        "gui:=True",
+        "rviz:=True"
+      ]
+    },
+    {
+      "name": "rviz model with fake hardware",
+      "type": "python",
+      "request": "launch",
+      "program": "/opt/ros/humble/bin/ros2",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "args": [
+        "launch",
+        "epsilon_crane_bringup",
+        "fake_model.launch.py",
+        "plot:=${input:plot}",
+        "rviz:=True",
+        "joystick:=${input:joystick}",
+        "matlab_excel:=False",
+        "tool:=${input:tool}",
+      ]
+    },
+    {
+      "name": "rivz model with motion planning GUI",
+      "type": "python",
+      "request": "launch",
+      "program": "/opt/ros/humble/bin/ros2",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "args": [
+        "launch",
+        "epsilon_crane_bringup",
+        "test_mp.launch.py",
+        "a2b_server_type:=${input:a2b_server_type}",
+        "gui:=${input:js_gui}",
+        "tool:=${input:tool}",
+      ]
+    },
+    // gdb launch of a ros executable
+    {
+      "name": "(gdb) Launch Node",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/install/${input:package}/lib/${input:package}/${input:program}",
+      "args": [],
+      "preLaunchTask": "build",
+      "stopAtEntry": true,
+      "cwd": "${workspaceFolder}",
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "C++ Debugger Attach",
+      "request": "launch",
+      "type": "cppdbg",
+      "miDebuggerServerAddress": "localhost:3001",
+      "cwd": "${workspaceFolder}",
+      "program": "${workspaceFolder}/install/${input:package}/lib/${input:package}/${input:program}",
+    },
+  ],
+  "inputs": [
+    {
+      "id": "package",
+      "type": "promptString",
+      "description": "Package name",
+      "default": "epsilon_crane_controller"
+    },
+    {
+      "id": "program",
+      "type": "promptString",
+      "description": "Program name",
+      "default": "controller_node"
+    },
+    {
+      "id": "plot",
+      "type": "pickString",
+      "description": "Plot signals?",
+      "options": [
+        "True",
+        "False",
+      ],
+      "default": "False"
+    },
+    {
+      "id": "rviz",
+      "type": "pickString",
+      "description": "Launch rviz?",
+      "options": [
+        "True",
+        "False",
+      ],
+      "default": "False"
+    },
+    {
+      "id": "js_gui",
+      "type": "pickString",
+      "description": "Use joint_state_publisher_gui(true) or fake hardware(false)?",
+      "options": [
+        "True",
+        "False",
+      ],
+      "default": "False"
+    },
+    {
+      "id": "joystick",
+      "type": "pickString",
+      "description": "Use joystick(true) or keyboard(false)?",
+      "options": [
+        "True",
+        "False",
+      ],
+      "default": "False"
+    },
+    {
+      "id": "perception",
+      "type": "pickString",
+      "description": "Use perception kit (and start rviz)?",
+      "options": [
+        "True",
+        "False",
+      ],
+      "default": "False"
+    },
+    {
+      "id": "initialPose",
+      "type": "pickString",
+      "description": "Initial pose? 1. Horizontal, 2. Outside, 3. Truckbed, 4. Transport, 5. Above log",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+      ],
+      "default": "1"
+    },
+    {
+      "id": "a2b_server_type",
+      "type": "pickString",
+      "description": "A2B server type? iLQR or SQP",
+      "options": [
+        "a2b_server",
+        "a2b_ilqr_server",
+      ],
+      "default": "a2b_server"
+    },
+    {
+      "id": "gripTraj",
+      "type": "pickString",
+      "description": "Launch gripper trajectory node?",
+      "options": [
+        "True",
+        "False",
+      ],
+      "default": "False"
+    },
+    {
+      "id": "crossPile",
+      "type": "pickString",
+      "description": "Spawn cross pile?",
+      "options": [
+        "True",
+        "False",
+      ],
+      "default": "False"
+    },
+    {
+      "id": "swController",
+      "type": "pickString",
+      "description": "Which controller 1..none, 2..proportional, 3..LQR?",
+      "options": [
+        "1",
+        "2",
+        "3",
+      ],
+      "default": "1"
+    },
+    {
+      "id": "tool",
+      "type": "pickString",
+      "description": "Choose tool description package?",
+      "options": [
+        "epsilon_yfg53_description",
+        "epsilon_7040_description",
+      ],
+      "default": "epsilon_yfg53_description"
+    },
+  ]
+}

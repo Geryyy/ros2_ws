@@ -1,0 +1,69 @@
+repositories:
+  epsilon_crane:
+    type: git
+    url: https://gitlab.ait.ac.at/leuchtturm-topic1/ros2_packages/epsilon_crane.git
+    version: master
+  epsilon_crane_msgs:
+    type: git
+    url: https://gitlab.ait.ac.at/leuchtturm-topic1/ros2_packages/epsilon_crane_msgs.git
+    version: master
+  gazebo_pkgs:
+    type: git
+    url: https://gitlab.ait.ac.at/leuchtturm-topic1/ros2_packages/gazebo_pkgs.git
+    version: master
+  gazebo_ros2_control_actuators:
+    type: git
+    url: https://gitlab.ait.ac.at/leuchtturm-topic1/ros2_packages/gazebo_ros2_control_actuators.git
+    version: master
+  testsite_description:
+    type: git
+    url: https://gitlab.ait.ac.at/leuchtturm-topic1/ros2_packages/testsite_description.git
+    version: master
+  epsilon_crane_ros2_control:
+    type: git
+    url: https://gitlab.ait.ac.at/leuchtturm-topic1/ros2_packages/epsilon_crane_ros2_control.git
+    version: master
+  sensor_description:
+    type: git
+    url: https://gitlab.ait.ac.at/leuchtturm-topic1/ros2_packages/sensor_description.git
+    version: master
+  matlab_codegen:
+    type: git
+    url: https://gitlab.ait.ac.at/leuchtturm-topic1/ros2_packages/matlab_codegen.git
+    version: master
+  gazebo_ros_vision:
+    type: git
+    url: https://gitlab.ait.ac.at/leuchtturm-topic1/ros2_packages/gazebo_ros_vision.git
+    version: master
+  utils:
+    type: git
+    url: https://gitlab.ait.ac.at/leuchtturm-topic1/ros2_packages/utils.git
+    version: main
+  ros2_control/ros2_controllers:
+    type: git
+    url: https://github.com/christophfroehlich/ros2_controllers.git
+    version: AIT
+  ros2_control/control_msgs:
+    type: git
+    url: https://github.com/ros-controls/control_msgs.git
+    version: master
+  timber_crane_rviz_plugins:
+    type: git
+    url: https://gitlab.ait.ac.at/leuchtturm-topic1/ros2_packages/timber_crane_rviz_plugins.git
+    version: main
+  plot_utils:
+    type: git
+    url: https://gitlab.ait.ac.at/leuchtturm-topic1/ros2_packages/plot_utils.git
+    version: main
+  epsilon_crane_behavior_tree:
+    type: git
+    url: https://gitlab.ait.ac.at/leuchtturm-topic1/ros2_packages/epsilon_crane_behavior_tree.git
+    version: main
+  as/wood_log_msgs:
+    type: git
+    url: https://gitlab.ait.ac.at/leuchtturm-topic1/ros2_packages/wood_log_msgs.git
+    version: main
+  as/wood_log_rviz_plugins:
+    type: git
+    url: https://gitlab.ait.ac.at/leuchtturm-topic1/ros2_packages/wood_log_rviz_plugins.git
+    version: main
