@@ -3,26 +3,7 @@ This is the workspace for ROS2.
 
 ## Content
 This workspace contains several nested repositories with the following packages
-* epsilon_crane_bringup
-* epsilon_crane_controller
-* epsilon_crane_controller_base
-* epsilon_crane_description
-* epsilon_crane_motion_planning
-* epsilon_crane_motion_planning_interfaces
-* epsilon_crane_msgs
-* epsilon_crane_parameter
-* epsilon_crane_ros2_controllers
-* epsilon_crane_sensor_calibration
-* epsilon_crane_trajectory_publishers
-* epsilon_crane_utils
-* gazebo_pkgs
-* gazebo_ros_vision
-* gazebo_ros2_control_actuators
-* matlab_codegen
-* plot_utils
-* sensor_description
-* testsite_description
-* timber_crane_rviz_plugins
+
 
 see the README files in the subfolders.
 
