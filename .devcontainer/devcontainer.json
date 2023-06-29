@@ -7,7 +7,7 @@
       //  if you do not have an nvidia driver (eg intel)
       "from": "ubuntu:jammy"
       //  if you have an nvidia driver use the following
-      //"from": "nvidia/cudagl:11.1.1-devel-ubuntu20.04"
+      // "from": "nvidia/cudagl:11.3.0-devel-ubuntu20.04"
     }
   },
   "context": "..",
@@ -50,10 +50,10 @@
   //"runArgs": [ "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined", "--runtime", "nvidia", "--privileged", "--gpus", "all", "-e", "DISPLAY", "-e", "QT_X11_NO_MITSHM=1", "--net", "host", "-v", "/home/user/.Xauthority:/root/.Xauthority:rw", "-v", "/tmp/.X11-unix:/tmp/.X11-unix" ],
   "runArgs": [
     // nvidia begin
-    // "--runtime",
-    // "nvidia",
-    // "--gpus",
-    // "all",
+    "--runtime",
+    "nvidia",
+    "--gpus",
+    "all",
     // nvidia end
     "--cap-add=SYS_PTRACE",
     "--security-opt",
@@ -63,17 +63,21 @@
     "DISPLAY=${env:DISPLAY}",
     "-e",
     "QT_X11_NO_MITSHM=1",
+    // "-e",
+    // "XDG_RUNTIME_DIR=${env:XDG_RUNTIME_DIR}",
     "-e",
-    "XDG_RUNTIME_DIR=${env:XDG_RUNTIME_DIR}",
+    "NVIDIA_DRIVER_CAPABILITIES=all",
     "--net",
     "host",
     //"-v", ".:/workspace:cached",
-    // "-v",
-    // "/home/user/.Xauthority:/root/.Xauthority:rw",
+    "-v",
+    "/home/user/.Xauthority:/root/.Xauthority:rw",
     // "-v",
     // "/home/murschitzm/test:/mnt/data",
     "-v",
     "/tmp/.X11-unix:/tmp/.X11-unix",
+    // "-v",
+    // "/dev/dri:/dev/dri",
     "--device=/dev:/dev"
   ],
   // sets correct permission for shell scripts. may be run once only
