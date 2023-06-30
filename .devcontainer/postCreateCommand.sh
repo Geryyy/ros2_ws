@@ -14,3 +14,9 @@ source /opt/ros/humble/setup.bash
 vcs import src < ros.repos
 # update dependencies
 rosdep install -riy --skip-keys "plotjuggler plotjuggler-ros plotjuggler-msgs ros2_controllers admittance_controller diff_drive_controller tricycle_controller gazebo_ros gazebo_ros2_control gazebo_ros_vision gazebo_grasp_plugin_ros testsite_description" --from-paths src
+
+
+# copy and install arc
+# ./install_arc.sh
+./.devcontainer/install_arc.sh
+

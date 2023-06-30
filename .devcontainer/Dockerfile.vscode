@@ -242,6 +242,18 @@ RUN \
   apt-get clean -y && \
   rm -rf /var/lib/apt/lists/*
 
+
+# install eigen
+RUN \
+  cd /opt/ && \
+  git clone https://gitlab.com/libeigen/eigen.git && cd eigen && git checkout tags/3.4.0 &&\
+  cd /opt/eigen && \
+  mkdir build && cd build && \
+  cmake .. && \
+  make && \
+  make install 
+
+
 # install behavior trees
 # RUN \
 #   # set -x for debug output
@@ -328,3 +340,17 @@ RUN echo "source /opt/ros/humble/setup.bash" >> "/home/${USERNAME}/.bashrc" \
   && usermod -aG video ${USERNAME} \
   && usermod -aG dialout ${USERNAME} \
   && usermod -aG kvm ${USERNAME} # joystick
+
+
+
+
+# # copy and install arc
+# RUN \
+#   : "install arc from src" && \
+#   cd /opt/ && \
+#   cp -r /workspace/lib/arc . && \
+#   cd /opt/arc && \
+#   sudo mkdir build && cd build && \
+#   cmake .. && \
+#   make && \
+#   sudo make install 

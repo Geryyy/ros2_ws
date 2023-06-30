@@ -78,7 +78,9 @@
     "/tmp/.X11-unix:/tmp/.X11-unix",
     // "-v",
     // "/dev/dri:/dev/dri",
-    "--device=/dev:/dev"
+    "--device=/dev:/dev",
+    "-v",
+    "${env:HOME}/.ssh/id_ed25519:/root/.ssh/id_ed25519"
   ],
   // sets correct permission for shell scripts. may be run once only
   "onCreateCommand": "sudo chmod +x .devcontainer/*.sh",

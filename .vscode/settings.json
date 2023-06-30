@@ -165,5 +165,6 @@
     "build",
     "install"
   ],
-  "git.repositoryScanMaxDepth": 3
+  "git.repositoryScanMaxDepth": 3,
+  "cmake.sourceDirectory": "/workspaces/ros2_ws/lib/arc/doc"
 }
