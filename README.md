@@ -1,11 +1,25 @@
-# ROS2 Baustelle Workspace
-This is the workspace for ROS2.
+# ARC ROS2 Workspace
+This is the workspace for arc with ROS2 Humble provided as docker container. (The use of **docker is strongly recommended!**). The intended use is with VS Code and the devcontainer extension. 
+
+## Getting Started
+After cloning make sure to run
+```bash
+git submodule update --init --recursive
+```
+to update all subsequent submodules. 
+This will load arc into /lib/arc and initialize all submodules of arc. 
+
+Build the docker image and connect to the container:
+- Open the root directory of this workspace in vs code (e.g. `code .`).
+- You will be asked to reopen in container. Do so. (Otherwise click reopen in container in vs code - i.e. click blue button on the left bottom corner in VS Code).
+
 
 ## Content
-This workspace contains several nested repositories with the following packages
+The envirinment is set in the `Dockerfile.vscode` (dir: .devcontainer) and the docker flags are set in `devcontainer.json`.
 
+The `lib` folder contains additional git repositories where authentification is needed, like arc. This repos get cloned as submodules of the root repo. In `posCreateCommand.sh` these repos are build and installed.
 
-see the README files in the subfolders.
+The `src`folder is the actual working directory. Here the ros2 packages are placed. For additional ros packages use the `ros.repos` file. 
 
 ## Prerequisites
 There are two ways to fullfill the requirements:

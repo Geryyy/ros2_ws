@@ -166,5 +166,9 @@
     "install"
   ],
   "git.repositoryScanMaxDepth": 3,
-  "cmake.sourceDirectory": "/workspaces/ros2_ws/lib/arc/doc"
+  "cmake.sourceDirectory": "/workspaces/ros2_ws/lib/arc/doc",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8"
+  },
+  "python.formatting.provider": "none"
 }
