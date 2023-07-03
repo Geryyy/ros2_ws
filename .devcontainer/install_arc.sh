@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # copy and install arc
+sudo rm -rf /opt/arc
 echo "install arc from src" 
 sudo cp -rf /workspaces/ros2_ws/lib/arc /opt/arc/ 
 cd /opt/arc/lib
